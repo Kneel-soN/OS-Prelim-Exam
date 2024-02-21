@@ -5,51 +5,144 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-
+import { GanttChart } from './ganttchart';
 export function Algoselect() {
   const [processes, setProcesses] = useState([]);
   const [selectedAlgo, setSelectedAlgo] = useState("FCFS");
   const [inputValues, setInputValues] = useState({});
+  const [quantum, setQuantum] = useState(1);
+  const [averageTurnaroundTime, setAverageTurnaroundTime] = useState(0);
+  const [averageWaitTime, setAverageWaitTime] = useState(0);
 
   const addProcess = () => {
-    const newId = processes.length +   1;
-    setProcesses([...processes, { id: newId, arrivalTime:   0, burstTime:  0 }]);
+    const newId = processes.length + 1;
+    setProcesses([...processes, { id: newId, arrivalTime: 0, burstTime: 0, completionTime: 0, turnaroundTime: 0, waitTime: 0 }]);
   };
 
   const deleteProcess = (id) => {
     const updatedProcesses = processes.filter((process) => process.id !== id);
-    const reindexedProcesses = updatedProcesses.map((process, index) => ({
-      ...process,
-      id: index +   1,
-    }));
-    setProcesses(reindexedProcesses);
+    setProcesses(updatedProcesses);
   };
 
   const calculateFCFS = () => {
     const sortedProcesses = [...processes].sort((a, b) => a.arrivalTime - b.arrivalTime);
+    let currentTime = 0;
+    let totalWaitingTime = 0;
+    let totalTurnaroundTime = 0;
 
-    let currentTime =   0;
-    const waitingTimes = {};
-    const turnaroundTimes = {};
-
-    sortedProcesses.forEach((process) => {
+    sortedProcesses.forEach((process, index) => {
       if (process.arrivalTime > currentTime) {
         currentTime = process.arrivalTime;
       }
-      waitingTimes[process.id] = currentTime - process.arrivalTime;
+      process.waitTime = currentTime - process.arrivalTime;
+      totalWaitingTime += process.waitTime;
       currentTime += process.burstTime;
-      turnaroundTimes[process.id] = currentTime - process.arrivalTime;
+      process.completionTime = currentTime;
+      process.turnaroundTime = process.completionTime - process.arrivalTime;
+      totalTurnaroundTime += process.turnaroundTime;
     });
 
-    const updatedProcesses = processes.map((process) => ({
-      ...process,
-      waitingTime: waitingTimes[process.id],
-      completionTime: turnaroundTimes[process.id],
-      turnaroundTime: turnaroundTimes[process.id],
-    }));
-
+    const updatedProcesses = sortedProcesses.map((process) => ({ ...process }));
     setProcesses(updatedProcesses);
-    console.log(updatedProcesses)
+
+    setAverageTurnaroundTime(totalTurnaroundTime / processes.length);
+    setAverageWaitTime(totalWaitingTime / processes.length);
+  };
+
+  const calculateSJN = () => {
+    const sortedProcesses = [...processes].sort((a, b) => a.burstTime - b.burstTime);
+    let currentTime = 0;
+    let totalWaitingTime = 0;
+    let totalTurnaroundTime = 0;
+
+    sortedProcesses.forEach((process, index) => {
+      if (process.arrivalTime > currentTime) {
+        currentTime = process.arrivalTime;
+      }
+      process.waitTime = currentTime - process.arrivalTime;
+      totalWaitingTime += process.waitTime;
+      currentTime += process.burstTime;
+      process.completionTime = currentTime;
+      process.turnaroundTime = process.completionTime - process.arrivalTime;
+      totalTurnaroundTime += process.turnaroundTime;
+    });
+
+    const updatedProcesses = sortedProcesses.map((process) => ({ ...process }));
+    setProcesses(updatedProcesses);
+
+    setAverageTurnaroundTime(totalTurnaroundTime / processes.length);
+    setAverageWaitTime(totalWaitingTime / processes.length);
+  };
+
+  const calculateRR = () => {
+    let currentTime = 0;
+    let totalWaitingTime = 0;
+    let totalTurnaroundTime = 0;
+    const remainingProcesses = [...processes];
+  
+    while (remainingProcesses.length > 0) {
+      for (let i = 0; i < remainingProcesses.length; i++) {
+        const process = remainingProcesses[i];
+        const timeToExecute = Math.min(quantum, process.burstTime);
+        currentTime += timeToExecute;
+        process.burstTime -= timeToExecute;
+  
+        if (process.burstTime <= 0) {
+          process.completionTime = currentTime;
+          process.turnaroundTime = process.completionTime - process.arrivalTime;
+          process.waitTime = process.turnaroundTime - process.burstTime; 
+          totalWaitingTime += process.waitTime;
+          totalTurnaroundTime += process.turnaroundTime;
+          remainingProcesses.splice(i, 1);
+          i--;
+        }
+      }
+    }
+  
+    const updatedProcesses = processes.map((process) => ({ ...process }));
+    setProcesses(updatedProcesses);
+  
+    const numProcesses = processes.length;
+    const averageTurnaroundTime = totalTurnaroundTime / numProcesses;
+    const averageWaitTime = totalWaitingTime / numProcesses;
+  
+    setAverageTurnaroundTime(averageTurnaroundTime);
+    setAverageWaitTime(averageWaitTime);
+  };
+  
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    switch (selectedAlgo) {
+      case 'FCFS':
+        calculateFCFS();
+        break;
+      case 'SJN':
+        calculateSJN();
+        break;
+      case 'RR':
+        calculateRR();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleQuantumChange = (event) => {
+    setQuantum(parseInt(event.target.value, 10));
+  };
+
+  const handleInputChange = (id, type, value) => {
+    const updatedProcesses = processes.map((process) => {
+      if (process.id === id) {
+        return {
+          ...process,
+          [type]: parseInt(value, 10)
+        };
+      }
+      return process;
+    });
+    setProcesses(updatedProcesses);
   };
 
   return (
@@ -116,6 +209,7 @@ export function Algoselect() {
                           [`arrival-${process.id}`]: e.target.value,
                         })
                       }
+                      onBlur={(e) => handleInputChange(process.id, 'arrivalTime', e.target.value)}
                       id={`arrival-${process.id}`}
                       size="sm"
                     />
@@ -129,18 +223,19 @@ export function Algoselect() {
                           [`burst-${process.id}`]: e.target.value,
                         })
                       }
+                      onBlur={(e) => handleInputChange(process.id, 'burstTime', e.target.value)}
                       id={`burst-${process.id}`}
                       size="sm"
                     />
                   </TableCell>
                   <TableCell>
-                    <Input defaultValue={process.completionTime} id={`arrival-${process.id}`} size="sm" disabled/>
+                    <Input value={process.completionTime} size="sm" disabled />
                   </TableCell>
                   <TableCell>
-                    <Input defaultValue={process.turnAroundTime} id={`arrival-${process.id}`} size="sm" disabled/>
+                    <Input value={process.turnaroundTime} size="sm" disabled />
                   </TableCell>
                   <TableCell>
-                    <Input defaultValue={process.waitTime} id={`arrival-${process.id}`} size="sm" disabled/>
+                    <Input value={process.waitTime} size="sm" disabled />
                   </TableCell>
                   <TableCell>
                     <Button onClick={() => deleteProcess(process.id)}>Delete</Button>
@@ -154,7 +249,29 @@ export function Algoselect() {
           <Button onClick={addProcess} size="sm">Add Process</Button>
         </div>
       </div>
-      <Button onClick={calculateFCFS} size="lg">Submit</Button>
+      {selectedAlgo === 'RR' && (
+        <div className="border rounded-lg p-4">
+          <Label htmlFor="quantum">Quantum:</Label>
+          <Input
+            type="number"
+            id="quantum"
+            name="quantum"
+            value={quantum}
+            onChange={handleQuantumChange}
+            className="w-20 ml-2"
+            size="sm"
+          />
+        </div>
+      )}
+      <Button onClick={handleSubmit} size="lg">Submit</Button>
+      {averageTurnaroundTime !== 0 && averageWaitTime !== 0 && (
+        <div className="mt-4">
+          <p>Average Turnaround Time: {averageTurnaroundTime}</p>
+          <p>Average Wait Time: {averageWaitTime}</p>
+          <GanttChart processes={processes} />
+
+        </div>
+      )}
     </div>
   );
 }
