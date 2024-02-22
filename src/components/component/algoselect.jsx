@@ -51,12 +51,12 @@ export function Algoselect() {
     setAverageWaitTime(totalWaitingTime / processes.length);
   };
 
-  const calculateSJN = () => {
+  const calculateSJF = () => {
     const sortedProcesses = [...processes].sort((a, b) => a.burstTime - b.burstTime);
-    let currentTime = 0;
-    let totalWaitingTime = 0;
-    let totalTurnaroundTime = 0;
-
+    let currentTime =  0;
+    let totalWaitingTime =  0;
+    let totalTurnaroundTime =  0;
+  
     sortedProcesses.forEach((process, index) => {
       if (process.arrivalTime > currentTime) {
         currentTime = process.arrivalTime;
@@ -68,13 +68,14 @@ export function Algoselect() {
       process.turnaroundTime = process.completionTime - process.arrivalTime;
       totalTurnaroundTime += process.turnaroundTime;
     });
-
+  
     const updatedProcesses = sortedProcesses.map((process) => ({ ...process }));
     setProcesses(updatedProcesses);
-
+  
     setAverageTurnaroundTime(totalTurnaroundTime / processes.length);
     setAverageWaitTime(totalWaitingTime / processes.length);
   };
+  
   const calculateRR = () => {
     if (quantum <=   0) {
       console.error("Quantum should be a positive integer.");
@@ -195,8 +196,8 @@ export function Algoselect() {
       case 'FCFS':
         calculateFCFS();
         break;
-      case 'SJN':
-        calculateSJN();
+      case 'SJF': // Changed from 'SJN' to 'SJF'
+        calculateSJF(); // Changed from calculateSJN to calculateSJF
         break;
       case 'RR':
         calculateRR();
@@ -211,7 +212,7 @@ export function Algoselect() {
         break;
     }
   };
-
+  
   const handleQuantumChange = (event) => {
     setQuantum(parseInt(event.target.value,  10));
   };
@@ -253,7 +254,7 @@ return (
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mt-1 w-36">
               <DropdownMenuItem value="fcfs" onClick={() => setSelectedAlgo('FCFS')}>First Come First Serve</DropdownMenuItem>
-              <DropdownMenuItem value="sjn" onClick={() => setSelectedAlgo('SJN')}>Shortest Job Next</DropdownMenuItem>
+              <DropdownMenuItem value="sjf" onClick={() => setSelectedAlgo('SJF')}>Shortest Job First</DropdownMenuItem>
               <DropdownMenuItem value="rr" onClick={() => setSelectedAlgo('RR')}>Round Robin</DropdownMenuItem>
               <DropdownMenuItem value="priority-nonpreemptive" onClick={() => setSelectedAlgo('Priority (non-preemptive)')}>Priority(non-preemptive)</DropdownMenuItem>
               <DropdownMenuItem value="priority-preemptive" onClick={() => setSelectedAlgo('Priority (preemptive)')}>Priority (preemptive)</DropdownMenuItem>
