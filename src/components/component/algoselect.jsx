@@ -75,42 +75,59 @@ export function Algoselect() {
     setAverageTurnaroundTime(totalTurnaroundTime / processes.length);
     setAverageWaitTime(totalWaitingTime / processes.length);
   };
-
   const calculateRR = () => {
-    let currentTime = 0;
-    let totalWaitingTime = 0;
-    let totalTurnaroundTime = 0;
-    const remainingProcesses = [...processes];
+    if (quantum <=   0) {
+      console.error("Quantum should be a positive integer.");
+      return;
+    }
   
-    while (remainingProcesses.length > 0) {
-      for (let i = 0; i < remainingProcesses.length; i++) {
-        const process = remainingProcesses[i];
+    let currentTime =   0;
+    let totalWaitingTime =   0;
+    let totalTurnaroundTime =   0;
+    const updatedProcesses = [...processes]; 
+  
+    while (updatedProcesses.length >   0) {
+      for (let i =   0; i < updatedProcesses.length; i++) {
+        const process = updatedProcesses[i];
         const timeToExecute = Math.min(quantum, process.burstTime);
         currentTime += timeToExecute;
         process.burstTime -= timeToExecute;
   
-        if (process.burstTime <= 0) {
-          process.completionTime = currentTime;
-          process.turnaroundTime = process.completionTime - process.arrivalTime;
-          process.waitTime = process.turnaroundTime - process.burstTime; 
-          totalWaitingTime += process.waitTime;
+        if (process.burstTime <=   0) {
+          process.completionTime = currentTime +  1; 
+          process.turnaroundTime = process.completionTime - process.arrivalTime; 
+          process.waitTime = process.turnaroundTime - process.burstTime - 2; 
+          totalWaitingTime += process.waitTime  ;
           totalTurnaroundTime += process.turnaroundTime;
-          remainingProcesses.splice(i, 1);
-          i--;
+          updatedProcesses.splice(i,   1);
+          i--; 
+        } else {
+          updatedProcesses.push(updatedProcesses.splice(i,   1)[0]);
+          i--; 
         }
       }
     }
   
-    const updatedProcesses = processes.map((process) => ({ ...process }));
-    setProcesses(updatedProcesses);
-  
     const numProcesses = processes.length;
+    if (numProcesses ===   0) {
+      console.error("No processes to calculate averages.");
+      return;
+    }
     const averageTurnaroundTime = totalTurnaroundTime / numProcesses;
     const averageWaitTime = totalWaitingTime / numProcesses;
   
     setAverageTurnaroundTime(averageTurnaroundTime);
     setAverageWaitTime(averageWaitTime);
   };
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   const calculateNonPreemptivePriority = () => {
     const sortedProcesses = [...processes].sort((a, b) => a.priority - b.priority);
@@ -360,4 +377,4 @@ return (
     )}
   </div>
 );
-}  
+}
