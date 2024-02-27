@@ -289,14 +289,22 @@ Show Authors
   </a>
 </div>
 
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+  <a href="https://web.facebook.com/dylanpangilinan30" target="_blank" rel="noopener noreferrer">
     <Image src={dyl} width={100} height={100} className="rounded-image" />
+  </a>
+  <a href="https://web.facebook.com/dylanpangilinan30" target="_blank" rel="noopener noreferrer">
     <span className='span-right'>Dylan Pangilinan</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px'  }}>
+  </a>
+</div>
+<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+  <a href="https://web.facebook.com/reinier.mariscotes.94" target="_blank" rel="noopener noreferrer">
     <Image src={rein} width={100} height={100} className="rounded-image" />
+  </a>
+  <a href="https://web.facebook.com/reinier.mariscotes.94" target="_blank" rel="noopener noreferrer">
     <span className='span-right'>Reinier Mariscotes</span>
-  </div>
+  </a>
+</div>
 
 </DrawerDescription>
 
