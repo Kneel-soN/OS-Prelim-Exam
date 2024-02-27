@@ -6,6 +6,24 @@ import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMen
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { GanttChart } from './ganttchart';
+import Image from 'next/image';
+import kneelson from "../../../public/kneelson.png"
+import gelo from "../../../public/gelo.png"
+import edep from "../../../public/edep.jpg"
+import rein from "../../../public/rein.png"
+import dyl from "../../../public/dylan.jpg"
+
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+
 
 export function Algoselect() {
   const [processes, setProcesses] = useState([]);
@@ -233,9 +251,71 @@ export function Algoselect() {
 
 return (
   <div className="px-4 grid gap-4">
+          <Drawer>
+          <DrawerTrigger>
+          <a className='bg-primary text-primary-foreground h-10 px-4 py-2 h-11 rounded-md px-8 hover:underline'>
+Show Authors
+</a>
+</DrawerTrigger>
+
+    <DrawerContent>
+      <DrawerHeader>
+      <DrawerTitle className="rainbow-button" style={{ textAlign: 'center', width: '100%',  justifyContent: 'center' }}>
+  <a style={{fontSize:20}}>  Operating Systems Prelim Exam Submission By: </a>
+  </DrawerTitle>
+  <DrawerDescription style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '25px' }}>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+  <a href="https://github.com/Kneel-soN" target="_blank" rel="noopener noreferrer">
+    <Image src={kneelson} width={100} height={100} className="rounded-image" />
+  </a>
+  <a href="https://github.com/Kneel-soN" target="_blank" rel="noopener noreferrer">
+    <span className='span-right'>Neilson Diñoso</span>
+  </a>
+</div>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+  <a href="https://github.com/franzivanedep" target="_blank" rel="noopener noreferrer">
+    <Image src={edep} width={100} height={100} className="rounded-image" />
+  </a>
+  <a href="https://github.com/franzivanedep" target="_blank" rel="noopener noreferrer">
+    <span className='span-right'>Franz Ivan Edep</span>
+  </a>
+</div>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+  <a href="https://github.com/I-Drink-Coffee" target="_blank" rel="noopener noreferrer">
+    <Image src={gelo} width={100} height={100} className="rounded-image" />
+  </a>
+  <a href="https://github.com/I-Drink-Coffee" target="_blank" rel="noopener noreferrer">
+    <span className='span-right'>Angelo De Vera</span>
+  </a>
+</div>
+
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+    <Image src={dyl} width={100} height={100} className="rounded-image" />
+    <span className='span-right'>Dylan Pangilinan</span>
+  </div>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px'  }}>
+    <Image src={rein} width={100} height={100} className="rounded-image" />
+    <span className='span-right'>Reinier Mariscotes</span>
+  </div>
+
+</DrawerDescription>
+
+
+
+
+
+      </DrawerHeader>
+      <DrawerFooter>
+        <DrawerClose>
+          <Button variant="outline">Close</Button>
+        </DrawerClose>
+      </DrawerFooter>
+    </DrawerContent>
+  </Drawer>
     <div className="border rounded-lg">
       <div className="flex items-center gap-2 p-4">
         <div className="flex items-center space-x-2">
+  
           <Label className="min-width-0" htmlFor="algorithm">
             Select Algorithm
           </Label>
@@ -376,6 +456,8 @@ return (
         <GanttChart processes={processes} />
       </div>
     )}
+
   </div>
+  
 );
 }

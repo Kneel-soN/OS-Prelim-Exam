@@ -64,6 +64,100 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
+
+
+
+  .span-right {
+    margin-left:  15px; /* Adjust the value as needed */
+  }
+  .rainbow-button {
+    background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation   2s ease-in-out infinite;
+    background-size:   400%   100%;
+    background-color: transparent; /* Make sure the background is transparent to see the gradient effect */
+}
+
+.rainbow-button:hover {
+    background-color: black; /* Change the background color on hover */
+}
+
+
+@keyframes rainbow_animation {
+    0%,  100% {
+        background-position:  0  0;
+    }
+    50% {
+        background-position:  100%  0;
+    }
+}
+
+
+@keyframes shake {
+  0%,  100% {
+   transform: translate(0,  0) rotate(0deg);
+ }
+  10% {
+   transform: translate(-1px, -2px) rotate(-1deg);
+ }
+  20% {
+   transform: translate(-3px,  0px) rotate(1deg);
+ }
+  30% {
+   transform: translate(3px,  2px) rotate(0deg);
+ }
+  40% {
+   transform: translate(1px, -1px) rotate(1deg);
+ }
+  50% {
+   transform: translate(-1px,  2px) rotate(-1deg);
+ }
+  60% {
+   transform: translate(-3px,  1px) rotate(0deg);
+ }
+  70% {
+   transform: translate(3px,  1px) rotate(-1deg);
+ }
+  80% {
+   transform: translate(-1px, -1px) rotate(1deg);
+ }
+  90% {
+   transform: translate(1px,  2px) rotate(0deg);
+ }
+}
+
+
+.rounded-image {
+  border-radius:  50%;
+margin-left: 25px; 
+}
+
+.rounded-image:hover {
+ animation: shake  0.5s infinite;
+}
+
+.span-right:hover {
+  animation: shake  0.5s infinite;
+ }
+
+.rounded-image2 {
+  border-radius:  50%;
+margin-left: 25px;
+transition: transform  0.3s ease-in-out; 
+}
+
+.rounded-image2:hover {
+  animation: shake  0.5s infinite;
+
+}
+
+
+
+
+  
+  
 }
  
 @layer base {
