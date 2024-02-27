@@ -232,7 +232,7 @@ export function Algoselect() {
 
 
 return (
-  <div className="px-4 grid gap-4">
+  <div className="bg-white border rounded-lg">
     <div className="border rounded-lg">
       <div className="flex items-center gap-2 p-4">
         <div className="flex items-center space-x-2">
@@ -263,7 +263,7 @@ return (
         </div>
       </div>
     </div>
-    <div className="border rounded-lg">
+    <div className="gap-2 p-4border rounded-lg">
       <div className="flex items-center justify-between p-4">
         <div className="font-medium">Processes</div>
         <hr />
@@ -379,3 +379,5 @@ return (
   </div>
 );
 }
+
+
