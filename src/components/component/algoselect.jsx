@@ -250,7 +250,7 @@ export function Algoselect() {
 
 
 return (
-  <div className="px-4 grid gap-4">
+  <div className="bg-white border rounded-lg">
           <Drawer>
           <DrawerTrigger>
           <a className='bg-primary text-primary-foreground h-10 px-4 py-2 h-11 rounded-md px-8 hover:underline'>
@@ -343,7 +343,7 @@ Show Authors
         </div>
       </div>
     </div>
-    <div className="border rounded-lg">
+    <div className="gap-2 p-4border rounded-lg">
       <div className="flex items-center justify-between p-4">
         <div className="font-medium">Processes</div>
         <hr />
@@ -461,3 +461,5 @@ Show Authors
   
 );
 }
+
+
