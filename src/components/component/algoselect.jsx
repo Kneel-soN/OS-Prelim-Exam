@@ -95,49 +95,64 @@ export function Algoselect() {
   };
   
   const calculateRR = () => {
-    if (quantum <=   0) {
+    if (quantum <= 0) {
       console.error("Quantum should be a positive integer.");
       return;
     }
   
-    let currentTime =   0;
-    let totalWaitingTime =   0;
-    let totalTurnaroundTime =   0;
+    let currentTime = Math.min(quantum, processes[0].arrivalTime); 
+    let prevProcessCompletionTime = currentTime; 
+    let totalWaitingTime = 0;
+    let totalTurnaroundTime = 0;
     const updatedProcesses = [...processes]; 
   
-    while (updatedProcesses.length >   0) {
-      for (let i =   0; i < updatedProcesses.length; i++) {
+    while (updatedProcesses.length > 0) {
+      for (let i = 0; i < updatedProcesses.length; i++) {
         const process = updatedProcesses[i];
+  
+        process.waitTime = Math.max(0, prevProcessCompletionTime - process.arrivalTime);
+  
         const timeToExecute = Math.min(quantum, process.burstTime);
         currentTime += timeToExecute;
         process.burstTime -= timeToExecute;
   
-        if (process.burstTime <=   0) {
-          process.completionTime = currentTime +  1; 
-          process.turnaroundTime = process.completionTime - process.arrivalTime; 
-          process.waitTime = process.turnaroundTime - process.burstTime - 2; 
-          totalWaitingTime += process.waitTime  ;
+        if (process.burstTime <= 0) {
+          process.completionTime = currentTime;
+          process.turnaroundTime = process.completionTime - process.arrivalTime;
           totalTurnaroundTime += process.turnaroundTime;
-          updatedProcesses.splice(i,   1);
+          totalWaitingTime += process.waitTime;
+          updatedProcesses.splice(i, 1); 
           i--; 
+          prevProcessCompletionTime = currentTime; 
         } else {
-          updatedProcesses.push(updatedProcesses.splice(i,   1)[0]);
+          updatedProcesses.push(updatedProcesses.splice(i, 1)[0]); 
           i--; 
         }
+      }
+  
+      if (updatedProcesses.length === 0) {
+        break; 
       }
     }
   
     const numProcesses = processes.length;
-    if (numProcesses ===   0) {
+    if (numProcesses === 0) {
       console.error("No processes to calculate averages.");
       return;
     }
+  
     const averageTurnaroundTime = totalTurnaroundTime / numProcesses;
     const averageWaitTime = totalWaitingTime / numProcesses;
+  
+    console.log('Average Turnaround Time:', averageTurnaroundTime);
+    console.log('Average Waiting Time:', averageWaitTime);
   
     setAverageTurnaroundTime(averageTurnaroundTime);
     setAverageWaitTime(averageWaitTime);
   };
+  
+
+
   
   
   
@@ -285,7 +300,7 @@ Show Authors
     <Image src={gelo} width={100} height={100} className="rounded-image" />
   </a>
   <a href="https://github.com/I-Drink-Coffee" target="_blank" rel="noopener noreferrer">
-    <span className='span-right'>Angelo De Vera</span>
+    <span className='span-right'>Angelo De Veyra</span>
   </a>
 </div>
 
