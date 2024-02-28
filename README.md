@@ -1,6 +1,6 @@
 Technological Institute of the Philippines Manila 2024
 
-Operating Systems - CPU Scheduling Algoritms
+Operating Systems - CPU Scheduling Algorithms
 
 By: Diñoso, Edep, De Veyra, Pangilinan, Mariscotes
 
